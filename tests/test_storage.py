@@ -157,4 +157,13 @@ class TestNotificationStoreThreadSafety:
                     f"id{idx}", title=f"Title {idx}", url=f"https://example.com/{idx}"
                 )
             except Exception as e:
-                errors.ap
+                errors.append(e)
+
+        threads = [threading.Thread(target=worker, args=(i,)) for i in range(20)]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
+
+        assert not errors, f"Thread errors: {errors}"
+        assert store.count() == 20
