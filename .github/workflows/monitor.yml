@@ -8,20 +8,25 @@ on:
   # ── Manual: trigger from the Actions tab ──────────────────────────────────
   workflow_dispatch:
     inputs:
+      test_mode:
+        description: "Send a Telegram test message and exit (verifies secrets)"
+        required: false
+        default: "false"
+        type: boolean
       debug_mode:
-        description: "Enable verbose debug logging"
+        description: "Enable verbose DEBUG-level logging"
         required: false
         default: "false"
         type: boolean
 
-# Prevent two runs from overlapping (e.g. a manual run while scheduled runs)
+# Prevent two runs from overlapping (e.g. a manual run during a scheduled run)
 concurrency:
   group: monitor
   cancel-in-progress: false
 
 jobs:
   monitor:
-    name: Run monitor
+    name: ${{ (inputs.test_mode == 'true' || inputs.test_mode == true) && 'Telegram integration test' || 'Monitor run' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -48,8 +53,26 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # ── 4. Run monitor ───────────────────────────────────────────────────
+      # ── 4a. Test mode — verify Telegram integration ───────────────────────
+      # Runs only when test_mode=true is selected in the manual dispatch form.
+      # Sends a single Telegram message to confirm BOT_TOKEN + CHAT_ID work.
+      # Does NOT run the scraper or modify last_seen.json.
+      - name: Telegram integration test
+        if: ${{ inputs.test_mode == 'true' || inputs.test_mode == true }}
+        env:
+          BOT_TOKEN:  ${{ secrets.BOT_TOKEN }}
+          CHAT_ID:    ${{ secrets.CHAT_ID }}
+          DEBUG_MODE: ${{ inputs.debug_mode || 'false' }}
+        run: |
+          echo "Running in TEST MODE — scraper will not run"
+          echo "BOT_TOKEN present: ${{ secrets.BOT_TOKEN != '' }}"
+          echo "CHAT_ID present:   ${{ secrets.CHAT_ID != '' }}"
+          python monitor.py --test ${{ (inputs.debug_mode == 'true' || inputs.debug_mode == true) && '--debug' || '' }}
+
+      # ── 4b. Normal mode — full monitoring cycle ────────────────────────────
+      # Runs on the 6-hour cron schedule and manual dispatches without test_mode.
       - name: Run Pareeksha Bhavan monitor
+        if: ${{ !(inputs.test_mode == 'true' || inputs.test_mode == true) }}
         env:
           # Telegram
           BOT_TOKEN:        ${{ secrets.BOT_TOKEN }}
@@ -64,12 +87,15 @@ jobs:
           KEYWORDS:         ${{ vars.KEYWORDS }}
           # Debug flag from manual trigger
           DEBUG_MODE:       ${{ inputs.debug_mode || 'false' }}
-        run: python monitor.py
+        run: |
+          python monitor.py ${{ (inputs.debug_mode == 'true' || inputs.debug_mode == true) && '--debug' || '' }}
 
-      # ── 5. Persist last_seen.json ────────────────────────────────────────
+      # ── 5. Persist last_seen.json (normal mode only) ─────────────────────
       # Commits the updated duplicate-suppression state back to main so the
       # next run knows which notifications have already been sent.
+      # Skipped in test mode — test mode never modifies last_seen.json.
       - name: Commit updated last_seen.json
+        if: ${{ !(inputs.test_mode == 'true' || inputs.test_mode == true) }}
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
