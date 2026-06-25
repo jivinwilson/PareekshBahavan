@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
 
   schedule:
-    # Runs every day at 8:00 AM IST (2:30 AM UTC)
-    - cron: "30 2 * * *"
+    # Every 6 hours
+    - cron: "0 */6 * * *"
 
 jobs:
   monitor:
@@ -25,5 +25,5 @@ jobs:
 
       - name: Test GitHub Actions
         run: |
-          echo "✅ GitHub Actions is working!"
-          echo "Today we will monitor Pareeksha Bhavan."
+          echo "GitHub Actions is working!"
+          echo "Pareeksha Bhavan Monitor started."
