@@ -77,12 +77,6 @@ jobs:
           # Telegram
           BOT_TOKEN:        ${{ secrets.BOT_TOKEN }}
           CHAT_ID:          ${{ secrets.CHAT_ID }}
-          # Email
-          EMAIL_HOST:       ${{ secrets.EMAIL_HOST }}
-          EMAIL_PORT:       ${{ secrets.EMAIL_PORT }}
-          EMAIL_USERNAME:   ${{ secrets.EMAIL_USERNAME }}
-          EMAIL_PASSWORD:   ${{ secrets.EMAIL_PASSWORD }}
-          EMAIL_TO:         ${{ secrets.EMAIL_TO }}
           # Optional keyword override (set as a GitHub Actions variable, not a secret)
           KEYWORDS:         ${{ vars.KEYWORDS }}
           # Debug flag from manual trigger
