@@ -1,0 +1,29 @@
+name: Pareeksha Bhavan Monitor
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    # Runs every day at 8:00 AM IST (2:30 AM UTC)
+    - cron: "30 2 * * *"
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify Python
+        run: python --version
+
+      - name: Test GitHub Actions
+        run: |
+          echo "✅ GitHub Actions is working!"
+          echo "Today we will monitor Pareeksha Bhavan."
