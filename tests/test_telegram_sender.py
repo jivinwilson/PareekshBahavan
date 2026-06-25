@@ -378,6 +378,8 @@ class TestTelegramSenderNotConfigured:
     def test_from_settings_succeeds_when_configured(self):
         mock_settings = MagicMock()
         mock_settings.telegram_enabled = True
+        mock_settings = MagicMock()
+        mock_settings.telegram_enabled = True
         mock_settings.bot_token.get_secret_value.return_value = BOT_TOKEN
         mock_settings.chat_id = CHAT_ID
         mock_settings.request_timeout = 30

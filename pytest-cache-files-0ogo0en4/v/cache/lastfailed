@@ -1,4 +1,1 @@
-{
-  "tests/test_telegram_sender.py::TestTelegramSenderNetworkErrors::test_retries_on_500_up_to_max": true,
-  "tests/test_telegram_sender.py::TestTelegramSenderNetworkErrors::test_succeeds_on_retry_after_transient_failure": true
-}
+{}
