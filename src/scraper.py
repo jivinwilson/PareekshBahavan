@@ -23,9 +23,9 @@ PageParser
        transfer-state blocks with notification arrays
 
 SiteScraper
-    Orchestrates fetching multiple pages (Notifications, Time Table,
-    Latest News).  Deduplicates by URL before returning.  Hands the
-    raw HTML to PageParser; never touches network internals.
+    Orchestrates fetching the Notifications page of the Pareeksha Bhavan
+    site.  Deduplicates by URL before returning.  Hands the raw HTML to
+    PageParser; never touches network internals.
 
 Resilience
 ----------
@@ -94,21 +94,13 @@ _DEFAULT_HEADERS = {
 # Pages to monitor, as (category_name, path) pairs.
 # Paths are resolved against base_url at runtime.
 _MONITORED_PAGES: list[tuple[str, str]] = [
-    ("Notifications", "/"),
-    ("Notifications", "/notifications"),
-    ("Time Table",    "/timetable"),
-    ("Latest News",   "/news"),
-    ("Latest News",   "/latestnews"),
+    ("Notifications", "index.php/examination/notifications"),
 ]
 
 # API endpoint candidates — tried in order; first 200 JSON response wins.
 _API_CANDIDATES: list[str] = [
     "/api/notifications",
     "/api/v1/notifications",
-    "/api/news",
-    "/api/v1/news",
-    "/api/timetable",
-    "/api/v1/timetable",
     "/api/getNotifications",
     "/api/Notification/GetAll",
 ]
@@ -139,7 +131,7 @@ class ScrapedItem:
         Parsed into a ``datetime`` via ``src.utils.parse_date`` when
         converting to a ``Notification``.
     category:
-        Section name (``"Notifications"``, ``"Time Table"``, ``"Latest News"``).
+        Section name (e.g. ``"Notifications"``).
     notification_id:
         Stable 16-char SHA-256 hash of (page_url, title).
     """
@@ -743,7 +735,7 @@ class PageParser:
 
 class SiteScraper:
     """
-    Orchestrates scraping all monitored pages of the Pareeksha Bhavan site.
+    Orchestrates scraping the Notifications page of the Pareeksha Bhavan site.
 
     Parameters
     ----------
@@ -852,12 +844,7 @@ class SiteScraper:
                 continue
             if data is None:
                 continue
-            # Guess category from path
             category = "Notifications"
-            if "timetable" in path.lower():
-                category = "Time Table"
-            elif "news" in path.lower():
-                category = "Latest News"
             items = self._parser.parse_json(data, self._base_url, category)
             if items:
                 log.info("scraper_api_found", path=path, count=len(items))

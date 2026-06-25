@@ -275,7 +275,12 @@ def run_normal_mode(log) -> int:
         return 1
 
     stats = RunStats(scraped=len(scraped_items))
-    log.info("scraper_complete", total_items=len(scraped_items))
+    pdfs_found = sum(1 for item in scraped_items if item.has_pdf)
+    log.info(
+        "scraper_complete",
+        total_items=len(scraped_items),
+        pdfs_found=pdfs_found,
+    )
 
     # ── Process each notification ─────────────────────────────────────────
     for item in scraped_items:
