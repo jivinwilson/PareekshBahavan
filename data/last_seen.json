@@ -1,4 +1,41 @@
 {
-  "notifications": [],
-  "last_checked": "2026-09-16T01:51:14.781114+00:00"
+  "notifications": [
+    {
+      "notification_id": "42762edbd468c818",
+      "title": "Fee Structure",
+      "url": "https://docs.uoc.ac.in/website/news/2024-06-01%2011:08:26_new1805.pdf",
+      "seen_at": "2026-09-16T10:21:19.259851+00:00"
+    },
+    {
+      "notification_id": "4d812bbf4864c1ad",
+      "title": "Academic Calendar",
+      "url": "https://docs.uoc.ac.in/website/news/2025-12-29%2011:23:48_new2217.pdf",
+      "seen_at": "2026-09-16T10:21:28.809292+00:00"
+    },
+    {
+      "notification_id": "652b35da3b214533",
+      "title": "Forms to Download",
+      "url": "https://pareekshabhavan.uoc.ac.in?page=forms",
+      "seen_at": "2026-09-16T10:21:28.810126+00:00"
+    },
+    {
+      "notification_id": "1e5cb798e0b03d58",
+      "title": "University of Calicut",
+      "url": "http://uoc.ac.in",
+      "seen_at": "2026-09-16T10:21:28.810632+00:00"
+    },
+    {
+      "notification_id": "472d4bc3d4689039",
+      "title": "Original Degree Certificate",
+      "url": "http://dconline.uoc.ac.in/",
+      "seen_at": "2026-09-16T10:21:28.811112+00:00"
+    },
+    {
+      "notification_id": "a622b6bb455dfd72",
+      "title": "E-Payment",
+      "url": "https://iwps.uoc.ac.in/",
+      "seen_at": "2026-09-16T10:21:28.811639+00:00"
+    }
+  ],
+  "last_checked": "2026-09-16T10:21:08.723534+00:00"
 }
